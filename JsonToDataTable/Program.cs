@@ -12,6 +12,7 @@ namespace JsonToDataTable
         {
             int id = 1;
             #region Students
+            //Create a list of students
             List<Student> students = new List<Student>
             {
                 new Student
@@ -36,9 +37,11 @@ namespace JsonToDataTable
                 }
             };
             #endregion
+            
+            //Create a list of ClassRooms
+            List<ClassRoom<JObject>> classRooms = new List<ClassRoom<JObject>>();
 
-            List<ClassRoom<JObject>> classRoom = new List<ClassRoom<JObject>>();
-
+            //Add the students to the class room and store the students as JObjects
             foreach (var student in students)
             {
                 var j = new ClassRoom<JObject>
@@ -46,10 +49,12 @@ namespace JsonToDataTable
                     ClassId = id++,
                     Student = JObject.FromObject(student)
                 };
-                classRoom.Add(j);
+                classRooms.Add(j);
             }
 
-            foreach (var room in classRoom)
+            #region ParseClassRoom
+            //Method 1 of getting the information of a class room
+            foreach (var room in classRooms)
             {
                 Console.WriteLine(room.ClassId);
                 var jsonObject = JsonConvert.DeserializeObject<JObject>(room.Student.ToString());
@@ -63,7 +68,8 @@ namespace JsonToDataTable
 
             Console.WriteLine("---------------------");
 
-            foreach (var room in classRoom)
+            //Method 2 of getting the information of a class room
+            foreach (var room in classRooms)
             {
                 Console.WriteLine(room.ClassId);
                 var jsonObject = JsonConvert.DeserializeObject<JObject>(room.Student.ToString());
@@ -76,28 +82,19 @@ namespace JsonToDataTable
             
             Console.WriteLine("---------------------");
 
-            foreach (var room in classRoom)
+
+            //Method 3 of getting the information of a class room
+            foreach (var room in classRooms)
             {
+                Console.WriteLine(room.ClassId);
                 Console.WriteLine(JObject.Parse(room.Student.ToString())["Name"].ToString());
                 Console.WriteLine(JObject.Parse(room.Student.ToString())["StudentId"].ToString());
                 Console.WriteLine(JObject.Parse(room.Student.ToString())["Birthday"].ToString());
             }
-
-            #region JObject
-            ////This Does NOT Work
-            //var jsonObject = JObject.FromObject(students);
-            //var temp = JsonConvert.SerializeObject(jsonObject);
-            ////DataTable temp2 = JsonConvert.DeserializeObject<DataTable>(temp);
-
-            ////foreach (var row in temp2.AsEnumerable())
-            ////{
-            ////    Console.WriteLine(row.Field<string>("Name"));
-            ////    Console.WriteLine(row.Field<long>("StudentId"));
-            ////    Console.WriteLine(row.Field<DateTime?>("Birthday"));
-            ////}
             #endregion
 
             #region StringJson
+            //Basics of serializing object to JSON and Deserializing object to DateTable
             Console.WriteLine("---------------------");
             string json = JsonConvert.SerializeObject(students);
             DataTable jsonDateTabe = JsonConvert.DeserializeObject<DataTable>(json);
