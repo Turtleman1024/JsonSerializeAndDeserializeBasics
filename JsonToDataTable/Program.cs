@@ -54,43 +54,23 @@ namespace JsonToDataTable
 
             #region ParseClassRoom
             //Method 1 of getting the information of a class room
-            foreach (var room in classRooms)
-            {
-                Console.WriteLine(room.ClassId);
-                var jsonObject = JsonConvert.DeserializeObject<JObject>(room.Student.ToString());
-                jsonObject.TryGetValue("Name", out JToken value);
-                Console.WriteLine(value);
-                jsonObject.TryGetValue("StudentId", out value);
-                Console.WriteLine(value);
-                jsonObject.TryGetValue("Birthday", out value);
-                Console.WriteLine(value);                
-            }
+            Method1(classRooms);
 
             Console.WriteLine("---------------------");
 
             //Method 2 of getting the information of a class room
-            foreach (var room in classRooms)
-            {
-                Console.WriteLine(room.ClassId);
-                var jsonObject = JsonConvert.DeserializeObject<JObject>(room.Student.ToString());
-                foreach (var j in jsonObject)
-                {
-                    Console.WriteLine(j.Value.ToString());
-                }
-                Console.WriteLine();
-            }
+            Method2(classRooms);
             
             Console.WriteLine("---------------------");
 
 
             //Method 3 of getting the information of a class room
-            foreach (var room in classRooms)
-            {
-                Console.WriteLine(room.ClassId);
-                Console.WriteLine(JObject.Parse(room.Student.ToString())["Name"].ToString());
-                Console.WriteLine(JObject.Parse(room.Student.ToString())["StudentId"].ToString());
-                Console.WriteLine(JObject.Parse(room.Student.ToString())["Birthday"].ToString());
-            }
+            Method3(classRooms);
+
+            Console.WriteLine("=====================");
+
+            //Method 4 of getting the information of a class room
+            Method4(classRooms);
             #endregion
 
             #region StringJson
@@ -108,6 +88,58 @@ namespace JsonToDataTable
             #endregion
 
             Console.ReadLine();
+        }
+
+        private static void Method4(List<ClassRoom<JObject>> classRooms)
+        {
+            //Is a dictonary so can index the JObject by its key
+            foreach(var room in classRooms)
+            {
+                Console.WriteLine(room.ClassId);
+                Console.WriteLine(room.Student["Name"]);
+                Console.WriteLine(room.Student["StudentId"]);
+                Console.WriteLine(room.Student["Birthday"]);
+            }
+        }
+
+        private static void Method3(List<ClassRoom<JObject>> classRooms)
+        {
+            foreach (var room in classRooms)
+            {
+                Console.WriteLine(room.ClassId);
+                Console.WriteLine(JObject.Parse(room.Student.ToString())["Name"].ToString());
+                Console.WriteLine(JObject.Parse(room.Student.ToString())["StudentId"].ToString());
+                Console.WriteLine(JObject.Parse(room.Student.ToString())["Birthday"].ToString());
+            }
+        }
+
+        private static void Method2(List<ClassRoom<JObject>> classRooms)
+        {
+            foreach (var room in classRooms)
+            {
+                Console.WriteLine(room.ClassId);
+                var jsonObject = JsonConvert.DeserializeObject<JObject>(room.Student.ToString());
+                foreach (var j in jsonObject)
+                {
+                    Console.WriteLine(j.Value.ToString());
+                }
+                Console.WriteLine();
+            }
+        }
+
+        private static void Method1(List<ClassRoom<JObject>> classRooms)
+        {
+            foreach (var room in classRooms)
+            {
+                Console.WriteLine(room.ClassId);
+                var jsonObject = JsonConvert.DeserializeObject<JObject>(room.Student.ToString());
+                jsonObject.TryGetValue("Name", out JToken value);
+                Console.WriteLine(value);
+                jsonObject.TryGetValue("StudentId", out value);
+                Console.WriteLine(value);
+                jsonObject.TryGetValue("Birthday", out value);
+                Console.WriteLine(value);
+            }
         }
     }
 }
